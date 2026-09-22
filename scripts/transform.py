@@ -42,12 +42,12 @@ def validate(df):
             f"[transfrm] Found {n_duplicates} duplicate timestamps - aborting"
         )
         
-    print("[transform] Validationpassed: no nulls, no duplicate timestamps")
+    print("[transform] Validation passed: no nulls, no duplicate timestamps")
     
     
 def save(df, source_raw_path):
     raw_stem = Path(source_raw_path).stem
-    out_path =DATA_DIR / f"{raw_stem} _clean.csv"
+    out_path =DATA_DIR / f"{raw_stem}_clean.csv"
     df.to_csv(out_path, index=False)
     print(f"[transform] Saved clean data -> {out_path}")
     return out_path
