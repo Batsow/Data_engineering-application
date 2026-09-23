@@ -49,4 +49,27 @@ def get_average_conditions(conn):
         FROM hourly_weather
     """
     return conn.execute(sql).fetchone()
+
+#This checks something different — actual value sanity 
+#(humidity can't be negative or over 100%, wind can't be negative) — at the database itself, after loading
+def run_data_quality_checks(conn):
+    row_count = conn.execute("SELECT COUNT(*) FROM hourly_weather").fetchone()[0]
+    print(f"[query] Row count: {row_count}")
+
+    if row_count == 0:
+        raise ValueError("[query] Data quality check failed: table is empty")
+
+    bad_humidity = conn.execute(
+        "SELECT COUNT(*) FROM hourly_weather WHERE humidity_pct < 0 OR humidity_pct > 100"
+    ).fetchone()[0]
+    if bad_humidity > 0:
+        raise ValueError(f"[query] Data quality check failed: {bad_humidity} rows with humidity out of range")
+
+    negative_wind = conn.execute(
+        "SELECT COUNT(*) FROM hourly_weather WHERE wind_speed_kmh < 0"
+    ).fetchone()[0]
+    if negative_wind > 0:
+        raise ValueError(f"[query] Data quality check failed: {negative_wind} rows with negative wind speed")
+
+    print("[query] Data quality checks passed: row count > 0, humidity in range, wind non-negative")
     
