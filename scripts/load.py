@@ -43,3 +43,9 @@ def insert_rows(df):
     inserted = rows_after - rows_before
     print(f"[load] Inserted {inserted} new rows ({len(df) - inserted} already existed)")
     return inserted
+
+
+if __name__ == "__main__":
+    csv_path = sys.argv[1]
+    df = load_clean_csv(csv_path)
+    insert_rows(df)
