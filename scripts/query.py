@@ -73,3 +73,22 @@ def run_data_quality_checks(conn):
 
     print("[query] Data quality checks passed: row count > 0, humidity in range, wind non-negative")
     
+
+def print_summary(conn):
+    hot = get_hottest_hour(conn)
+    cold = get_coldest_hour(conn)
+    windy = get_windiest_hour(conn)
+    avg = get_average_conditions(conn)
+    
+    print()
+    print("=== Weather Summary ===")
+    print(f"Hottest hour:  {hot['timestamp']} - {hot['temperature_c']} C")
+    print(f"Coldest hour:  {cold['timestamp']} - {cold['temperature_c']} C")
+    print(f"Windiest hour: {windy['timestamp']} - {windy['wind_speed_kmh']} km/h")
+    print(f"Averages:      {avg['avg_temp']} C, {avg['avg_humidity']}%, {avg['avg_wind']} km/h")
+
+if __name__ == "__main__":
+    conn = get_connection()
+    run_data_quality_checks(conn)
+    print_summary(conn)
+    conn.close()
